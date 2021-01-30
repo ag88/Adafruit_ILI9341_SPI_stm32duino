@@ -59,7 +59,7 @@ being improved.  Hence things are always in flux including if those repositories
     
   You can connect an additional (gpio) pin to the backlight pin on the LCD module. However
   , do check that there is some resistance of a few hundred ohms  at the LCD backlight pin. 
-  Accordingly, it goes to a resistor to transistor (base) there driving the backlight,  but it is beter to
+  Accordingly, it goes to a resistor to transistor (base) there driving the backlight,  but it is better to
   be careful so as not to short out mcu pins.  SPI uses the default SPI in the core (e.g. SPI1).
   
   the mappings in graphics test sketch is as follows
@@ -162,7 +162,7 @@ header legend
 
 Note that this probably isn't the most 'optimized', but that an attempt is to only use the SPI.h interfaces. 
 This in part to allow codes to be used across the cores, keeping much of the codes common. reducing the if-defs.
-The use of bit banding still helps with the STM core, though it isn't too obvious in the above stats.
+The use of hardware SPI and bit banding still helps with the STM core, though it isn't too obvious in the above stats.
 The Adafruit stats on libmaple core isn't directly comparable to STM core as it is different.
 
 ### Limitations
@@ -207,4 +207,4 @@ And the various individuals Fedreric who maintain the Official (stm32duino) STM 
 - [arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 developing this has taken quite some effort mainly in getting it to work across the cores, optimizations and some tests.
-if you use this codes and found it useful, you may like to buy me a coffee [![Donate](resources/donorbox.svg)](https://donorbox.org/stm32duino-ili9341-lib) ;)
+if you use this codes and found it useful, you may like to buy me a coffee [![Donate](web/donorbox.svg)](https://donorbox.org/stm32duino-ili9341-lib) ;)
