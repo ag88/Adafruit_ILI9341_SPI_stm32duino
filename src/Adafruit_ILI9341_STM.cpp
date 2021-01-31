@@ -69,9 +69,9 @@ void Adafruit_ILI9341_STM::begin(SPIClass & spi, uint32_t freq)
 #endif
 
 #ifdef ARDUINO_ARCH_STM32
-  __IO uint32_t *base = &(((GPIO_TypeDef *)(digitalPinToPort(_cs)))->ODR);
+  __IO uint32_t *base = portOutputRegister(digitalPinToPort(_cs));
   cs_addr = bb_perip(base, STM_PIN(digitalPinToPinName(_cs)));
-  base = &(((GPIO_TypeDef *)(digitalPinToPort(_dc)))->ODR);
+  base = portOutputRegister(digitalPinToPort(_dc));
   dc_addr = bb_perip(base, STM_PIN(digitalPinToPinName(_dc)));
 #elif defined(ARDUINO_ARCH_STM32F1)
   volatile uint32 *base = &(PIN_MAP[_cs].gpio_device->regs->ODR);
