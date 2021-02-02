@@ -141,17 +141,18 @@ some results:
 
 Benchmark (microseconds) | Adafruit stm32f401ccu libmaple | this stm32f401ccu libmaple | this stm32f401ccu STM | this stm32f103c libmaple
 --- | --- | --- | --- | --- 
-Screen fill	| 476799 | 154057 |270212 | 180352
-Text | 41574 | 28803 | 64929 | 46125
-Lines | 352653 | 172626 | 419343 | 262946
-Horiz/Vert Lines | 41711 | 15210 | 28710 | 19460
-Rectangles (outline) | 26464 | 10875 | 21287 | 14081
-Rectangles (filled) | 990327 | 321102 | 566554 | 376639
-Circles (filled) | 138760 | 91825 | 206731 | 125040
-Circles (outline) | 156673 | 105738 | 262278 | 183625
-Triangles (outline) | 79426 | 46922 | 112643 | 65977
-Triangles (filled) | 339544 | 152668 | 305522 | 202842
-sum | 2643931 | 1099826 | 2258209 | 1477087
+Screen fill | 476799 | 154214 | 281883 | 218151
+Text | 41574 | 28952 | 64955 | 46689
+Lines | 352653 | 178780 | 422315 | 271537
+Horiz/Vert Lines | 41711 | 16029 | 28396 | 20380
+Rectangles (outline) | 26464 | 11457 | 21453 | 15329
+Rectangles (filled) | 990327 | 321118 | 596881 | 453655
+Circles (filled) | 138760 | 96610 | 209908 | 133400
+Circles (outline) | 156673 | 105746 | 262480 | 185020
+Triangles (outline) | 79426 | 49149 | 114021 | 69658
+Triangles (filled) | 339544 | 160997 | 309810 | 218832
+sum | 2643931 | 1123052 | 2312102 | 1632651
+
 
 header legend
 - first word. e.g. [Adafruit](https://github.com/adafruit/Adafruit_ILI9341) is the lib used, 'this' is this lib

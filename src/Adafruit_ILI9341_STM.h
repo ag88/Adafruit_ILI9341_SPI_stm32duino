@@ -199,13 +199,16 @@ public:
 	/* this is currently unused, it may be used, with setAddrWindow to 'draw a pixel' */
 	void pushColor(uint16_t color);
 
-	/* this is used internally by fillScreen(), fillRect() to fill up the 'Address window'
-	 * bounding box with color pixels. it is the main 'driving routine' that stream
-	 * pixels out using hardware SPI (with DMA if possible)
-	 * it uses a linebuffer (defined in private variables below) that is 1 line (320px) large.
-	 * each pixel is 16 bits (2 bytes) hence that makes it 320px * 2 ~ 640 bytes used in ram
+	/* this stream pixels out using hardware SPI (with DMA if possible)
+	 * it uses a linebuffer (defined in private variables below) that is COLORBUF_SIZE large.
 	 */
 	void pushColors(void *colorBuffer, uint16_t nr_pixels, uint8_t async = 0);
+
+	/* this is used internally by fillScreen(), fillRect() to fill up the 'Address window'
+	 * bounding box with color pixels.
+	 * calls pushColors in turn to actually push the pixels
+	 */
+	void pushcolors(uint16_t color, uint32_t nr_pixels, uint8_t async = 0);
 
 	/* some 'utility' functions */
 
@@ -256,7 +259,12 @@ private:
 	int8_t _cs, _dc, _rst;
 	volatile uint32_t *dc_addr, *cs_addr;
 
-	uint16_t linebuffer[ILI9341_TFTHEIGHT]; //DMA pixel buffer 16bit color data per pixel
+
+// COLORBUF_SIZE has to be multiples of 2 as each pixel is 16 bit color
+// e.g. if COLORBUF_SIZE is 64, each pixel is 16 bits (2 bytes)
+// hence that makes it 64px * 2 ~ 128 bytes used in ram
+#define COLORBUF_SIZE 64
+	uint16_t linebuffer[COLORBUF_SIZE]; //DMA pixel buffer 16bit color data per pixel
 
 	// this library uses bitbanding this means that it would only work on mcus with bit-banding
 	// e.g. Cortex M3 (e.g. stm32f1xx), Cortex M4 (e.g. stm32f4xx) etc

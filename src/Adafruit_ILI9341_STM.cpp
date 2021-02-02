@@ -266,6 +266,7 @@ void Adafruit_ILI9341_STM::setAddrWindow(uint16_t x0, uint16_t y0,
   writecommand(ILI9341_RAMWR); // write to RAM
 }
 
+
 /*
  * colors are 16 bits per pixel, using 8 bits (byte size) SPI transfers
  * hence nr_pixels * 2. SPI need to be setup before calling this.
@@ -289,6 +290,30 @@ cs_clear();
 #endif
 
 cs_set();
+}
+
+void Adafruit_ILI9341_STM::pushcolors(uint16_t color, uint32_t nr_pixels, uint8_t async){
+
+	//swap byte order as this is using 8 bit SPI transfers
+	color = ((color & 0xff00) >> 8) | ((color& 0xff) << 8);
+
+	/* fill up color buffer */
+    uint16_t blen = nr_pixels < COLORBUF_SIZE? nr_pixels :COLORBUF_SIZE;
+	for(uint16_t i=0; i<blen; i++)
+	  linebuffer[i] = color;
+
+#ifdef ARDUINO_ARCH_STM32
+  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, SPI_TRANSMITONLY));
+#endif
+
+	/* push pixels */
+	while(nr_pixels > 0) {
+	  uint16_t nsend = nr_pixels < COLORBUF_SIZE? nr_pixels :COLORBUF_SIZE;
+	  pushColors(linebuffer, nsend, async);
+
+	  nr_pixels -= nsend;
+	}
+
 }
 
 void Adafruit_ILI9341_STM::pushColor(uint16_t color)
@@ -323,15 +348,8 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
   }
 
   setAddrWindow(x, y, x, y + h - 1);
-  color = ((color & 0xff00) >> 8) | ((color& 0xff) << 8);
 
-#ifdef ARDUINO_ARCH_STM32
-  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, SPI_TRANSMITONLY));
-#endif
-
-  for(int i=0; i<h; i++)
-	  linebuffer[i] = color;
-  pushColors(linebuffer, h, 0);
+  pushcolors(color, h, 0);
 
 }
 
@@ -349,15 +367,8 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
   }
 
   setAddrWindow(x, y, x + w - 1, y);
-  color = ((color & 0xff00) >> 8) | ((color& 0xff) << 8);
 
-#ifdef ARDUINO_ARCH_STM32
-  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, SPI_TRANSMITONLY));
-#endif
-
-  for(int i=0; i<w; i++)
-	  linebuffer[i] = color;
-  pushColors(linebuffer, w, 0);
+  pushcolors(color, w, 0);
 
 }
 
@@ -365,21 +376,13 @@ void Adafruit_ILI9341_STM::fillScreen(uint16_t color)
 {
    color = ((color & 0xff00) >> 8) | ((color& 0xff) << 8);
 
-  for(uint16_t i=0; i<ILI9341_TFTHEIGHT;i++)
+  for(uint16_t i=0; i<COLORBUF_SIZE;i++)
 	  linebuffer[i] = color;
   setAddrWindow(0, 0, _width - 1, _height - 1);
 
   uint32_t nr_pix = _width * _height;
 
-#ifdef ARDUINO_ARCH_STM32
-  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, SPI_TRANSMITONLY));
-#endif
-
-  while(nr_pix > 0) {
-	  uint16_t nsend = nr_pix < ILI9341_TFTHEIGHT? nr_pix :ILI9341_TFTHEIGHT;
-	  pushColors(linebuffer, nsend, 0);
-	  nr_pix -= nsend;
-  }
+  pushcolors(color, nr_pix, 0);
 
 }
 
@@ -387,7 +390,6 @@ void Adafruit_ILI9341_STM::fillScreen(uint16_t color)
 void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
                                    uint16_t color)
 {
-  color = ((color & 0xff00) >> 8) | ((color& 0xff) << 8);
 
   // rudimentary clipping (drawChar w/big text requires this)
   if ((x >= _width) || (y >= _height || h < 1 || w < 1)) return;
@@ -399,19 +401,8 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   }
   setAddrWindow(x, y, x + w - 1, y + h - 1);
   uint32_t nr_pix = w * h;
-  uint16_t blen = nr_pix < ILI9341_TFTHEIGHT? nr_pix :ILI9341_TFTHEIGHT;
-  for(uint16_t i=0; i<blen; i++)
-	  linebuffer[i] = color;
 
-#ifdef ARDUINO_ARCH_STM32
-  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, SPI_TRANSMITONLY));
-#endif
-
-  while(nr_pix > 0) {
-	  uint16_t nsend = nr_pix < ILI9341_TFTHEIGHT? nr_pix :ILI9341_TFTHEIGHT;
-	  pushColors(linebuffer, nsend, 0);
-	  nr_pix -= nsend;
-  }
+  pushcolors(color, nr_pix, 0);
 
 }
 
