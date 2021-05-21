@@ -208,4 +208,4 @@ And the various individuals Fedreric who maintain the Official (stm32duino) STM 
 - [arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 developing this has taken quite some effort mainly in getting it to work across the cores, optimizations and some tests.
-if you use this codes and found it useful, you may like to buy me a coffee [![Donate](web/donorbox.svg)](https://donorbox.org/stm32duino-ili9341-lib) ;)
+if you use this codes and found it useful, i'd really appreciate it if you could support my efforts [![Donate](web/donorbox.svg)](https://donorbox.org/stm32duino-ili9341-lib) ;)
